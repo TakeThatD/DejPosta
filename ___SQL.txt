@@ -1,5 +1,5 @@
 -- @Tomasz Wicher
--- skrypt uruchomiæ w utworzonej bazie danych dejpostadb
+-- skrypt uruchomiÄ‡ w utworzonej bazie danych dejpostadb
 
 
 CREATE TABLE uzytkownik (
