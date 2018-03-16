@@ -1,0 +1,33 @@
+{extends file=$conf->root_path|cat:"/templates/main.html"}
+
+{block name=top}
+  <nav class="tekst-srodek bottom-margin">
+    <a class="pure-button button-success" href="{$conf->action_root}nowyUzytkownik">Nowy użytkownik</a>
+  </nav>
+
+  <table width="900" class="pure-table pure-table-bordered">
+    <thead>
+      <tr>
+        <th width="30%">login</th>
+        <th width="30%">haslo</th>
+        <th width="20%">rola</th>
+        <th width="20%"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {foreach $uzytkownicy as $uzytkownik}
+      {strip}
+        <tr>
+          <td>{$uzytkownik['login']}</td>
+          <td>{$uzytkownik['haslo']}</td>
+          <td>{$uzytkownik['rola']}</td>
+          <td>
+            <a href="{$conf->action_root}edytujUzytkownika&id_uzytkownika={$uzytkownik['id_uzytkownika']}">[edytuj]</a>
+            <a onclick='confirmLink("{$conf->action_root}usunUzytkownika&id_uzytkownika={$uzytkownik["id_uzytkownika"]}", "Na pewno usunąć?")'>[usuń]</a>
+          </td>
+        </tr>
+      {/strip}
+      {/foreach}
+    </tbody>
+  </table>
+{/block}

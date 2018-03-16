@@ -1,0 +1,19 @@
+{extends file=$conf->root_path|cat:"/templates/main.html"}
+
+{block name=top}
+<form action="{$conf->action_root}login" method="post" class="pure-form pure-form-aligned bottom-margin">
+
+        <div class="pure-control-group">
+			<label for="id_login">login: </label>
+			<input id="id_login" type="text" name="login" value="{$form->login}"/>
+		</div>
+        <div class="pure-control-group">
+			<label for="id_pass">hasło: </label>
+			<input id="id_pass" type="password" name="pass" /><br />
+		</div>
+		<div class="pure-control-group">
+			<input type="submit" value="zaloguj" class="pure-button pure-button-primary" style="margin-left: 180px"/>
+      		<a class="pure-button" href="{$conf->action_root}nowyUzytkownik">nowy</a>
+		</div>
+</form>
+{/block}

@@ -1,0 +1,19 @@
+<table id="temat_tabela" class="pure-table pure-table-bordered" width="100%" border="1">
+  <tbody>
+    {foreach $tematy as $temat}
+    {strip}
+      <tr>
+        <td width="60%"><a href="{$conf->action_root}pokazTemat&id_tematu={$temat["id_tematu"]}">{$temat["nazwa"]}</a></td>
+        <td width="20%">{$temat["login"]}</td>
+        <td width="20%">{$temat["data_czas"]}</td>
+        <td>
+          {if $temat['id_uzytkownika']==$id_uzytkownika  || $rola_uzytkownika eq "admin"}
+            <a href="{$conf->action_root}edytujTemat&id_tematu={$temat["id_tematu"]}">[edycja]</a>
+            <a onclick='confirmLink("{$conf->action_root}usunTemat&id_tematu={$temat["id_tematu"]}", "Na pewno usunąć temat?")'>[usuń]</a>
+          {/if}
+        </td>
+      </tr>
+    {/strip}
+    {/foreach}
+  </tbody>
+</table>

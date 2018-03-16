@@ -1,0 +1,24 @@
+<!-- informacja dla smarty że najpierw ma wczytać plik /templates/main.html - czablon menu itd.. -->
+{extends file=$conf->root_path|cat:"/templates/main.html"}
+
+{block name=top}
+  <form method="POST" id="formularz" class="pure-form pure-form-aligned" action="{$conf->action_root}zapiszTemat">
+    <div class="pure-control-group">
+      <input id="id_tematu" type="text" name="id_tematu" value="{$formularz->id_tematu}" hidden />
+    </div>
+
+    <div class="pure-control-group">
+      <label for="nazwa">nazwa tematu</label>
+      <input id="nazwa" type="text" name="nazwa" value="{$formularz->nazwa}" placeholder="nazwa" />
+    </div>
+
+    <div class="pure-control-group">
+      <label for="tresc">treść</label>
+      <textarea id="tresc" type="textarea" name="tresc" placeholder="tresc" rows="6" cols="60">{$formularz->tresc}</textarea>
+    </div>
+
+    <div class="pure-control-group">
+      <button class="pure-button pure-button-primary" type="submit">Zapisz</button>
+    </div>
+  </form>
+{/block}

@@ -1,0 +1,119 @@
+<!-- każdy wyświetlony post jest osobną tabelą, pierwsza linia zawiera autora, datę utworzenia oraz możliwe akcje (wczytane ze Smarty)
+     druga linia tabeli zawiera treść postu, wczytana ze smarty, znajduje się w divie post[IDPOSTU]treść i jest domyślnie pokazana
+     trzecia linia tabeli zawiera formularz edycji postu (pole tekstowe - ze wstawioną treścią ze smarty, z przyciskiem zapisz)
+     znajduje się ona w divie post[IDPOSTU]edycja i jest generowany tylko jeżeli użytkownik jest autorem postu lub jest w roli admina.
+     div z formularzem edycji jest domyślnie ukryty (nie widać go po załadowaniu strony), dobiero gdy użytkownik klika opcję edytuj
+     to skrypt w JS (na samym dole opis) ukrywa drugi wiersz tabeli (display: none) a pokazuje trzeci wiersz (display: initial).
+     Jeżeli przycisk edytuj zostanie naciśnięty kolejny raz wykonywana jest akcja odwrotna (drugi-initial, trzeci-none). -->
+
+<!-- pętla Smarty, dla wszystkich elementów tablicy posty, przypisując każdy element do zmiennej post wykonaj: -->
+{foreach $posty as $post}
+{strip}
+    <table width="100%" class="pure-table pure-table-bordered bottom-margin">
+      <tbody>
+        <!-- pierwsza linia tabeli - autor, data, akcje -->
+        <tr bgcolor="#ffb">
+          <td width="30%">
+            Autor: {$post['login']}
+          </td>
+          <td width="50%">
+            Utworzony: {$post['data_czas']}
+          </td>
+          <td>
+            <!-- akcje wyświetl tylko jeżeli id użytkownika który jest zalogowany jest równa id użytkownika który napisał post
+                 lub zalogowany użytkownik jest w roli administratora
+                 akcja edycji wywołuje funkcje JS, edytujPost jako parametr przekazywane jest id postu wstawione przez Smarty
+                 akcja usunięcia wywołuje funkcję confirmLink(link, wiadomośc) która wyświetla powiadomienie w przeglądarce,
+                 jeżeli zostanie ono potwierdzone to wysłane zostaje zapytanie o stronę pod przesłanym linkiem
+                 w tym przypadku usuńPost z doklejonym id_postu (żeby wiadomo który usunąć) i id_tematu (żeby wiadomo do którego
+                 tematu przekierować użytkownika po usunięciu postu - znajdzie się w tym samym miejscu, czyli temacie)-->
+            {if $post['id_uzytkownika']==$id_uzytkownika || $rola_uzytkownika eq "admin"}<a onclick="edytujPost({$post["id_postu"]})">[edytuj]</a>
+            <a onclick='confirmLink("{$conf->action_root}usunPost&id_postu={$post["id_postu"]}&id_tematu={$temat["id_tematu"]}", "Na pewno usunąć post?")'>[usuń]</a>{/if}
+          </td>
+        </tr>
+        <!-- koniec pierwszej lini tabeli -->
+        <tr bgcolor="#eee">
+          <td colspan=3>
+            <!-- div w którym smarty wstawia treść postu, za zmienną smarty wstawione jest |nl2br, działa to na zasadzie jak
+                 potoki w unixie, czyli po wczytaniu zmiennej przekaż ją do programu nl2br i wyświetl jego wyjście
+                 program nl2br zamienia znaki nowej lini (\n) na html'owe <br /> dzięki czemu entery są widoczne na stronie
+                 div jest domyślnie włączony (widoczny) display: initial -->
+            <div id="post{$post["id_postu"]}tresc" style="display: initial;">
+              {$post['tresc']|nl2br}
+            </div>
+            <!-- koniec diva z treścią -->
+            <!-- div dodawany tylko w przypadku gdy użytkownik jest autorem postu, lub adminem.
+                 zawiera formularz edycji zawierający ukryte pola id_postu i id_tematu które uzupełnia smarty przy generowaniu
+                 oraz pole tekstowe do którego wstawiana jest treść postu i przycisk zatwierdzający formularz, zatwierdzenie
+                 powodóje wysłanie zapytania do akcji zapisu postu z dołączonymi danymi z pola formularza
+                 div po załadowaniu strony jest ukryty (niewidoczny) display:none -->
+            {if $post['id_uzytkownika']==$id_uzytkownika || $rola_uzytkownika eq "admin"}
+            <div id="post{$post["id_postu"]}edycja" style="display: none;">
+              <form id="formularz" method="POST" action="{$conf->action_root}zapiszPost">
+                <input type="text" id="id_postu" name="id_postu" value="{$post["id_postu"]}" hidden/>
+                <input type="text" id="id_tematu" name="id_tematu" value="{$temat["id_tematu"]}" hidden/>
+                <textarea id="tresc" name="tresc" rows=5 cols=100 placeholder="treść">{$post['tresc']}</textarea></br>
+                <button type="submit">Zapisz</button>
+              </form>
+            </div>
+            {/if}
+            <!-- koniec diva z formularzem edycji -->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+{/strip}
+{/foreach}
+<!-- koniec pętli samrty -->
+
+<!-- formularz nowego postu, tabela zawierająca trzy linie. pierwsza zawiera napis NOWY POST, druga pole tekstowe na treść wiadomości
+     a trzecia przycisko wysyłający zapytanie z formularzem (akcja: zapisz post). przed tabelą są jeszcze dwa ukryte pola
+     przechowujące id_postu i id_tematu. jest to ten sam formularz co wyżej, inaczej uzupełniony przez smaty (brak id_postu i treści)-->
+<form id="formularz" method="POST" action="{$conf->action_root}zapiszPost">
+  <!-- ukryte pola -->
+  <input type="text" id="id_postu" name="id_postu" value="" hidden />
+  <input type="text" id="id_tematu" name="id_tematu" value="{$temat["id_tematu"]}" hidden />
+  <!-- koniec ukrytych pól -->
+  <!-- tabela -->
+  <table class="pure-table pure-table-bordered bottom-margin" width="100%">
+    <tbody>
+      <tr bgcolor="#ffb">
+        <td>
+          NOWY POST
+        </td>
+      </tr>
+      <tr bgcolor="#eee">
+        <td width="20%">
+          <textarea id="tresc" name="tresc" rows=5 cols=100 placeholder="treść"></textarea>
+        </td>
+      </tr>
+      <tr bgcolor="#eee">
+        <td>
+          <button type="submit">Dodaj</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- koniec tabeli -->
+</form>
+
+<!-- JS -->
+
+<!-- w if skrypt pobiera element z pliku html o id post[IDPOSTU]tresc (IDPOSTU przekazane w parametrze) i pobiera wartość
+     stylu w atrybucie display (u nas none lub initial) jeżeli wartość ta ustawiona jest na initial, to pobiera ten sam
+     element (to samo id) i zmienia ją na none, oraz pobiera drugi element o id post[IDPOSTU]edycja i zamienia jego wartość
+     na initial (nie sprawdza jaka jest bo wiemy że mogą wystąpić tylko dwie wartości i nigdy nie wystąpią takie same w
+     tych dwóch elementach). jeżeli wartość w if okaże się fałszem (ustawiona wartość elementu post[IDPOSTU]tresc na none)
+     to nastąpi przypisanie odwrotne do wyżej przestawionego (treść initial, edycja none)-->
+<script>
+function edytujPost(postID){
+  if (document.getElementById("post" + postID + "tresc").style.display == "initial") {
+    document.getElementById("post" + postID + "tresc").style.display = "none";
+    document.getElementById("post" + postID + "edycja").style.display = "initial";
+  } else {
+    document.getElementById("post" + postID + "tresc").style.display = "initial";
+    document.getElementById("post" + postID + "edycja").style.display = "none";
+  }
+}
+</script>

@@ -1,0 +1,41 @@
+-- @Tomasz Wicher
+-- skrypt uruchomiæ w utworzonej bazie danych dejpostadb
+
+
+CREATE TABLE uzytkownik (
+      id_uzytkownika        INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      login                 VARCHAR(15) NOT NULL,
+      haslo                 VARCHAR(20) NOT NULL,
+      rola                  VARCHAR(10) NOT NULL
+) CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci';
+
+CREATE TABLE temat (
+    id_tematu         INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_uzytkownika    INTEGER NOT NULL,
+    nazwa             VARCHAR(55) NOT NULL,
+    data_czas    		  TIMESTAMP NOT NULL,
+    tresc		   		    TEXT NOT NULL,
+
+	CONSTRAINT fk_id_uzytkownika_v2
+		FOREIGN KEY (id_uzytkownika) REFERENCES uzytkownik(id_uzytkownika)
+		ON DELETE RESTRICT
+		ON UPDATE RESTRICT
+) CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci';
+
+CREATE TABLE post (
+    id_postu                INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_uzytkownika         	INTEGER NOT NULL,
+    id_tematu               INTEGER NOT NULL,
+    data_czas    		        TIMESTAMP NOT NULL,
+    tresc		   		          TEXT NOT NULL,
+
+	CONSTRAINT fk_id_uzytkownika
+		FOREIGN KEY (id_uzytkownika) REFERENCES uzytkownik(id_uzytkownika)
+		ON DELETE RESTRICT
+		ON UPDATE RESTRICT,
+
+	CONSTRAINT fk_id_tematu
+		FOREIGN KEY (id_tematu) REFERENCES temat(id_tematu)
+		ON DELETE RESTRICT
+		ON UPDATE RESTRICT
+) CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci';

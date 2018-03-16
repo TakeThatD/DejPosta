@@ -1,0 +1,21 @@
+{extends file=$conf->root_path|cat:"/templates/main.html"}
+
+{block name=top}
+  <form id="formularz_wyszukiwania" style="text-align: center;" class="pure-form bottom-margin" onsubmit="ajaxPostForm('formularz_wyszukiwania','{$conf->action_root}tematListaTabela','temat_tabela'); return false;">
+    <!-- pola wyszukiwania -->
+    <input type="text" name="fw_nazwa_tematu" placeholder="nazwa tematu" value="{$formularz_wyszukiwania->nazwa}" />
+    <button type="submit" class="pure-button pure-button-primary">Filtruj</button>
+
+    <!-- przycisk nowego tematu -->
+    <a class="pure-button button-success" href="{$conf->action_root}dodajTemat">Nowy temat</a>
+  </form>
+
+  <div class="bottom-margin">
+
+  </div>
+{/block}
+
+{block name=bottom}
+  <!-- załadowanie pliku w którym jest tabela z tematami -->
+  {include file=$conf->root_path|cat:"/app/temat/lista/TematListaTabela.html"}
+{/block}

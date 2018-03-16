@@ -1,0 +1,28 @@
+{extends file=$conf->root_path|cat:"/templates/main.html"}
+
+{block name=top}
+<form action="{$conf->action_root}zapiszUzytkownika" method="post" class="pure-form pure-form-aligned bottom-margin">
+    <input type="text" name="id_uzytkownika" value="{$formularz->id_uzytkownika}" hidden readonly/>
+    <div class="pure-control-group">
+			<label for="id_login">login: </label>
+			<input id="id_login" type="text" name="login" value="{$formularz->login}"/>
+		</div>
+    <div class="pure-control-group">
+			<label for="id_pass">hasło: </label>
+			<input id="id_pass" type="password" name="haslo" value="{$formularz->haslo}" /><br />
+		</div>
+    {if $rola_uzytkownika == 'admin'}
+    <div class="pure-control-group">
+      <label for="id_rola">rola: </label>
+      <select name="rola" id="id_rola">
+        <option value='user' {if $formularz->rola != 'admin'}checked{/if}>user</oprion>
+        <option value='admin' {if $formularz->rola == 'admin'}checked{/if}>admin</option>
+      </select>
+    </div>
+    {/if}
+    <div class="pure-control-group" style="margin-left: 130px">
+			<input type="submit" value="{if isset($formularz->id_uzytkownika)}zapisz{else}dodaj użytkownika{/if}" class="pure-button pure-button-primary"/>
+      {if !isset($formularz->id_uzytkownika)}<a class="pure-button" href="{$conf->action_root}loginShow">logowanie</a>{/if}
+    </div>
+</form>
+{/block}

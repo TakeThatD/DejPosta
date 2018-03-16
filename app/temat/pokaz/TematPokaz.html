@@ -1,0 +1,40 @@
+{extends file=$conf->root_path|cat:"/templates/main.html"}
+
+{block name=top}
+
+  <!-- nazwa tematu na górze -->
+  <div style="font-size: 1.4em; text-align:center;" class="bottom-margin">
+    Temat: {$temat['nazwa']}
+  </div>
+
+  <!-- tabela z pierwszym postem (który jest w tabeli temat) czyli treść tematu
+       struktura tabeli opisana w PostLista.html -->
+  <table width="100%" class="pure-table pure-table-bordered bottom-margin">
+    <tbody>
+      <tr bgcolor=#ffb>
+        <td width="30%">
+          Autor: {$temat['login']}
+        </td>
+        <td width="50%">
+          Utworzony: {$temat['data_czas']}
+        </td>
+        <td>
+          {if $temat['id_uzytkownika']==$id_uzytkownika || $rola_uzytkownika eq 'admin'}
+            <a href="{$conf->action_root}edytujTemat&id_tematu={$temat["id_tematu"]}">[edytuj]</a>
+            <a onclick='confirmLink("{$conf->action_root}usunTemat&id_tematu={$temat["id_tematu"]}", "Na pewno usunąć temat?")'>[usuń]</a>
+          {/if}
+        </td>
+      </tr>
+      <tr bgcolor="#eee">
+        <td colspan=4>
+          {$temat['tresc']|nl2br}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+{/block}
+
+{block name=bottom}
+  <!-- załaduj plik /app/post/lista/PostLista.html -->
+  {include file=$conf->root_path|cat:"/app/post/lista/PostLista.html"}
+{/block}

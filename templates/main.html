@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+
+<head>
+	<meta charset="utf-8"/>
+	<title>Aplikacja DejPosta</title>
+	<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+	<link rel="stylesheet" href="{$conf->app_url}/css/style.css">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+	<script type="text/javascript" src="{$conf->app_url}/js/functions.js"></script>
+</head>
+
+<body>
+<div class="tekst-gora">
+	<a href="{$conf->action_root}tematLista" style="text-decoration: none">DejPosta - forum dla ciebie</a>
+</div>
+<hr />
+<nav style="text-align:center;">
+	<a class="pure-button przycisk-menu" href="{$conf->action_root}tematLista">Lista tematów</a>
+	{if $rola_uzytkownika == 'admin'}
+		<a class="pure-button przycisk-menu" href="{$conf->action_root}uzytkownikLista">Uzytkownicy</a>
+	{/if}
+	{if isset($id_uzytkownika)}
+		<a class="pure-button przycisk-menu" href="{$conf->action_root}logout">Wyloguj</a>
+	{else}
+		<a class="pure-button przycisk-menu" href="{$conf->action_root}loginShow">Zaloguj</a>
+	{/if}
+</nav>
+
+
+<div style="margin-bottom: 20px;"></div>
+
+{block name=top} {/block}
+
+{block name=messages}
+
+{if $msgs->isMessage()}
+<div class="messages bottom-margin">
+	<ul>
+	{foreach $msgs->getMessages() as $msg}
+	{strip}
+		<li class="msg {if $msg->isError()}error{/if} {if $msg->isWarning()}warning{/if} {if $msg->isInfo()}info{/if}">{$msg->text}</li>
+	{/strip}
+	{/foreach}
+	</ul>
+</div>
+{/if}
+
+{/block}
+
+{block name=bottom} {/block}
+
+</div>
+</body>
+
+</html>
